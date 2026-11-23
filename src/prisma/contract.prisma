@@ -1,0 +1,33 @@
+// use prisma-8
+model User {
+  id        String   @id @onCreate(uuid())
+  name      String
+  password  String
+  role      String   @default('user')
+  orders    Order[]
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id        String      @id @onCreate(uuid())
+  name      String
+  price     Float
+  orderItem OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @onCreate(uuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int     @default(1)
+}
+
+model Order {
+  id        String      @id @onCreate(uuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+}
