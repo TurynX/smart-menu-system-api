@@ -4,7 +4,7 @@ import { LoginUserUsecase } from './application/use-cases/login-user.use-case';
 import { PrismaService } from '../lib/repository/prisma.service';
 import { AuthRepository } from './infrastructure/repositories/auth.repository';
 import { AuthPort } from './domain/ports/auth.port';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './infrastructure/controllers/auth.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthGuard } from './infrastructure/guards/auth.guard';
@@ -30,6 +30,6 @@ import { AuthGuard } from './infrastructure/guards/auth.guard';
     AuthGuard,
   ],
   controllers: [AuthController],
-  exports: [AuthGuard],
+  exports: [AuthGuard, JwtModule, AuthPort],
 })
 export class AuthModule {}

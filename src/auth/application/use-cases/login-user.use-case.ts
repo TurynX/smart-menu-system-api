@@ -24,7 +24,7 @@ export class LoginUserUsecase {
     const { password: _password, ...userWithoutPassword } = user;
 
     const payload = {
-      name: user.name,
+      sub: user.id,
       role: user.role,
     };
 

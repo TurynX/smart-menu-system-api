@@ -24,6 +24,25 @@
   "domain": {
     "namespaces": {
       "public": {
+        "enum": {
+          "ProductType": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "food",
+                "value": "food"
+              },
+              {
+                "name": "drink",
+                "value": "drink"
+              },
+              {
+                "name": "dessert",
+                "value": "dessert"
+              }
+            ]
+          }
+        },
         "models": {
           "Order": {
             "fields": {
@@ -207,6 +226,19 @@
                   "codecId": "pg/float8@1",
                   "kind": "scalar"
                 }
+              },
+              "type": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "ProductType",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
               }
             },
             "relations": {
@@ -236,6 +268,9 @@
                 },
                 "price": {
                   "column": "price"
+                },
+                "type": {
+                  "column": "type"
                 }
               },
               "namespaceId": "public",
@@ -489,6 +524,13 @@
               "uniques": []
             },
             "Product": {
+              "checks": [
+                {
+                  "expression": "\"type\" IN ('food', 'drink', 'dessert')",
+                  "name": "Product_type_check_49d8da93",
+                  "prefix": "Product_type_check"
+                }
+              ],
               "columns": {
                 "id": {
                   "codecId": "pg/text@1",
@@ -504,6 +546,17 @@
                   "codecId": "pg/float8@1",
                   "dataType": "pg/float8",
                   "nullable": false
+                },
+                "type": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "ProductType",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 }
               },
               "foreignKeys": [],
@@ -563,13 +616,23 @@
               },
               "uniques": []
             }
+          },
+          "valueSet": {
+            "ProductType": {
+              "kind": "valueSet",
+              "values": [
+                "food",
+                "drink",
+                "dessert"
+              ]
+            }
           }
         },
         "id": "public",
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "69823be856991621bb55ec5afa0d89040a349b5f8af83bdf258049727a1bf686"
+    "storageHash": "2104bbd50679f0a779d9c7d43ed32c4f266e4e06f3e958a536761f111526a9e4"
   },
   "execution": {
     "executionHash": "4ff91d21c70e18f479abf853acc6fe91ec2c14699003ccf471ac66c91de047c8",

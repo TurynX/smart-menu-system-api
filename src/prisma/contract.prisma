@@ -8,10 +8,17 @@ model User {
   createdAt DateTime @default(now())
 }
 
+enum ProductType {
+  food
+  drink
+  dessert
+}
+
 model Product {
   id        String      @id @onCreate(uuid())
   name      String
   price     Float
+  type      ProductType
   orderItem OrderItem[]
 }
 

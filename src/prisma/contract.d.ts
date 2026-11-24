@@ -18,7 +18,7 @@ import type {
 } from '@prisma/orm-postgres/contract-types';
 
 export type StorageHash =
-  StorageHashBase<'69823be856991621bb55ec5afa0d89040a349b5f8af83bdf258049727a1bf686'>;
+  StorageHashBase<'2104bbd50679f0a779d9c7d43ed32c4f266e4e06f3e958a536761f111526a9e4'>;
 export type ExecutionHash =
   ExecutionHashBase<'4ff91d21c70e18f479abf853acc6fe91ec2c14699003ccf471ac66c91de047c8'>;
 export type ProfileHash =
@@ -270,7 +270,18 @@ type DefaultLiteralValue<CodecId extends string, Encoded> = CodecId extends keyo
   : Encoded;
 type ParameterizedOutputTypeFunctions = PgParameterizedOutputTypes;
 
-type FieldTypeOverrides = {};
+type FieldTypeOverrides = {
+  readonly public: {
+    readonly models: {
+      readonly Product: {
+        readonly type: {
+          readonly output: 'food' | 'drink' | 'dessert';
+          readonly input: 'food' | 'drink' | 'dessert';
+        };
+      };
+    };
+  };
+};
 export type FieldOutputTypes = FieldTypesFromDomain<
   ContractBase['domain']['namespaces'],
   CodecTypes,
@@ -287,7 +298,16 @@ export type FieldInputTypes = FieldTypesFromDomain<
   'input',
   ContractBase['storage']['namespaces']
 >;
-type ColumnTypeOverrides = {};
+type ColumnTypeOverrides = {
+  readonly public: {
+    readonly Product: {
+      readonly type: {
+        readonly output: 'food' | 'drink' | 'dessert';
+        readonly input: 'food' | 'drink' | 'dessert';
+      };
+    };
+  };
+};
 export type StorageColumnTypes = ColumnTypesFromStorage<
   ContractBase['storage'],
   CodecTypes,
@@ -325,6 +345,7 @@ export namespace Models {
     id: FieldOutputTypes['public']['Product']['id'];
     name: FieldOutputTypes['public']['Product']['name'];
     price: FieldOutputTypes['public']['Product']['price'];
+    type: FieldOutputTypes['public']['Product']['type'];
     orderItem: public_OrderItem[];
     readonly [RelationKeys]?: 'orderItem';
   };
@@ -508,6 +529,12 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly many: false;
                 };
+                readonly type: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [];
@@ -557,6 +584,12 @@ type ContractBase = Omit<
               uniques: readonly [];
               indexes: readonly [];
               foreignKeys: readonly [];
+            };
+          };
+          readonly valueSet: {
+            readonly ProductType: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['food', 'drink', 'dessert'];
             };
           };
         };
@@ -699,6 +732,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/float8@1' };
               };
+              readonly type: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
             };
             readonly relations: {
               readonly orderItem: {
@@ -720,6 +757,7 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly name: { readonly column: 'name' };
                 readonly price: { readonly column: 'price' };
+                readonly type: { readonly column: 'type' };
               };
             };
           };
@@ -775,6 +813,23 @@ type ContractBase = Omit<
               };
             };
           };
+        };
+        readonly enum: {
+          readonly ProductType: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'food'; readonly value: 'food' },
+              { readonly name: 'drink'; readonly value: 'drink' },
+              { readonly name: 'dessert'; readonly value: 'dessert' },
+            ];
+          };
+        };
+        readonly enumMemberTypes?: {
+          readonly ProductType: readonly [
+            { readonly name: 'food'; readonly value: 'food' },
+            { readonly name: 'drink'; readonly value: 'drink' },
+            { readonly name: 'dessert'; readonly value: 'dessert' },
+          ];
         };
       };
     };
