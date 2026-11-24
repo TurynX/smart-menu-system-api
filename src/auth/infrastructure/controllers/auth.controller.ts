@@ -1,15 +1,8 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Req,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { CreateUserUseCase } from '../../application/use-cases/create-user.use-case';
 import { CreateUserDto } from '../dtos/auth.dto';
-import type { Request } from 'express';
 import { LoginUserUsecase } from 'src/auth/application/use-cases/login-user.use-case';
+
 @Controller('auth')
 export class AuthController {
   constructor(
