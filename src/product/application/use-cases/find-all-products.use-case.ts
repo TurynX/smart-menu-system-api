@@ -3,7 +3,7 @@ import { ProductEntity } from 'src/product/domain/entities/product.entity';
 import { ProductPort } from 'src/product/domain/ports/product.port';
 
 @Injectable()
-export class FindProductByNameOrIdUseCase {
+export class FindAllProductsUseCase {
   constructor(private readonly productPort: ProductPort) {}
 
   async execute(): Promise<ProductEntity[]> {

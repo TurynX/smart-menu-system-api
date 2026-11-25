@@ -5,13 +5,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/lib/repository/prisma.service';
-import { db } from 'src/prisma/db';
 import { ProductEntity } from 'src/product/domain/entities/product.entity';
 import {
   ProductPort,
   ProductEnum,
 } from 'src/product/domain/ports/product.port';
-import { GetProductsQueryDto } from '../dtos/product.dto';
 
 @Injectable()
 export class ProductRepository implements ProductPort {
@@ -58,7 +56,6 @@ export class ProductRepository implements ProductPort {
 
   async findAllProducts() {
     const product = await this.prisma.product.all();
-    console.log(product);
     if (product.length === 0) throw new NotFoundException('No product found');
     return product.map((p) => this.mapToEntity(p));
   }

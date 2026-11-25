@@ -5,7 +5,8 @@ import { ProductPort } from './domain/ports/product.port';
 import { AuthModule } from 'src/auth/auth.module';
 import { ProductController } from './infrastructure/controllers/product.controller';
 import { PrismaService } from 'src/lib/repository/prisma.service';
-import { FindProductByQuery } from './application/use-cases/find-product-by-query';
+import { FindProductByQueryUseCase } from './application/use-cases/find-product-by-query';
+import { FindAllProductsUseCase } from './application/use-cases/find-all-products.use-case';
 
 @Module({
   imports: [AuthModule],
@@ -13,7 +14,8 @@ import { FindProductByQuery } from './application/use-cases/find-product-by-quer
     PrismaService,
     { useClass: ProductRepository, provide: ProductPort },
     CreateProductUsecase,
-    FindProductByQuery,
+    FindProductByQueryUseCase,
+    FindAllProductsUseCase,
   ],
   controllers: [ProductController],
 })

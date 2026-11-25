@@ -4,10 +4,9 @@ import {
   ProductEnum,
   ProductPort,
 } from 'src/product/domain/ports/product.port';
-import { GetProductsQueryDto } from 'src/product/infrastructure/dtos/product.dto';
 
 @Injectable()
-export class FindProductByQuery {
+export class FindProductByQueryUseCase {
   constructor(private readonly productPort: ProductPort) {}
 
   async execute(name?: string, type?: ProductEnum): Promise<ProductEntity[]> {
