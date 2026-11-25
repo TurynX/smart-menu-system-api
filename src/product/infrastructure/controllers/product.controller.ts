@@ -1,9 +1,12 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Post,
+  Query,
   Req,
   UnauthorizedException,
   UseGuards,
@@ -13,16 +16,17 @@ import { AuthGuard } from 'src/auth/infrastructure/guards/auth.guard';
 import {
   CreateProductDto,
   FindProductByNameOrIdDto,
+  GetProductsQueryDto,
 } from '../dtos/product.dto';
 import { CreateProductUsecase } from 'src/product/application/use-cases/create-product.use-case';
-import { FindProductByNameOrIdUseCase } from 'src/product/application/use-cases/find-product-by-name-or-id.use-case';
+import { FindProductByQuery } from 'src/product/application/use-cases/find-product-by-query';
 
 @UseGuards(AuthGuard)
 @Controller('product')
 export class ProductController {
   constructor(
     private readonly createProductUseCase: CreateProductUsecase,
-    private readonly findProductByNameOrIdUseCase: FindProductByNameOrIdUseCase,
+    private readonly findProductByQuery: FindProductByQuery,
   ) {}
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -40,12 +44,15 @@ export class ProductController {
     return { data: product };
   }
 
-  @Post('find')
+  @Get()
   @HttpCode(HttpStatus.OK)
-  async findProductByNameOrId(@Body() body: FindProductByNameOrIdDto) {
-    const product = await this.findProductByNameOrIdUseCase.execute(
-      body.id,
-      body.name,
+  async findProductsFiltereds(@Query() query: GetProductsQueryDto) {
+    if (!query.search && !query.category) {
+      throw new NotFoundException('Search or category is required');
+    }
+    const product = await this.findProductByQuery.execute(
+      query.search,
+      query.category,
     );
 
     return { data: product };

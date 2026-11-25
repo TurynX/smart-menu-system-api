@@ -41,12 +41,12 @@ export class ProductRepository implements ProductPort {
         return this.mapToEntity(product);
       }
     } catch (error: any) {
-      console.log(error);
       if (error.code === 'RUNTIME.NO_ROWS')
         throw new NotFoundException('Product not found');
+      console.log(error);
     }
     if (name !== undefined) {
-      const product = await this.prisma.product.where({ name }).firstOrThrow();
+      const product = await this.prisma.product.where({ name }).first();
 
       if (!product) return null;
 
@@ -58,23 +58,23 @@ export class ProductRepository implements ProductPort {
 
   async findAllProducts() {
     const product = await this.prisma.product.all();
+    console.log(product);
     if (product.length === 0) throw new NotFoundException('No product found');
     return product.map((p) => this.mapToEntity(p));
   }
 
-  async findProductByFilters(query: GetProductsQueryDto) {
-    const { search, category } = query;
+  async findProductByFilters(name?: string, type?: ProductEnum) {
+    let queryBuilder = this.prisma.product;
 
-    let filters: any = [];
-
-    if (category) {
-      filters.category = category;
+    if (name) {
+      queryBuilder = queryBuilder.where((p) => p.name.ilike(`%${name}%`));
     }
 
-    if (search) {
-      filters.name = { ilike: `%${search}%` };
+    if (type) {
+      queryBuilder = queryBuilder.where({ type });
     }
-    const product = await this.prisma.product.where(filters).all();
+
+    const product = await queryBuilder.all();
     if (product.length === 0)
       throw new NotFoundException('No products found with the given filters');
 
@@ -94,27 +94,24 @@ export class ProductRepository implements ProductPort {
 
       return this.mapToEntity(product);
     } catch (error: any) {
-      if (error.code === 'P2025') {
+      if (error.code === 'RUNTIME.NO_ROWS') {
         throw new NotFoundException('Product not found');
       }
+
+      console.log(error);
       throw new InternalServerErrorException('Error in updating product');
     }
   }
 
   async deleteProduct(id: string) {
     try {
-      const product = await this.prisma.product.where({ id }).delete();
+      await this.prisma.product.where({ id }).delete();
       return;
     } catch (error: any) {
-      if (error.code === 'P2025') {
+      if (error.code === 'RUNTIME.NO_ROWS') {
         throw new NotFoundException('Product not found');
       }
-
-      if (error.code === 'P2003') {
-        throw new BadRequestException(
-          'Cannot delete product because it is associated with an order',
-        );
-      }
+      console.log(error);
 
       throw new InternalServerErrorException('Error in deleting product');
     }

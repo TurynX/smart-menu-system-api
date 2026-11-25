@@ -42,6 +42,6 @@ export class GetProductsQueryDto {
   search?: string;
 
   @IsOptional()
-  @IsString()
-  category?: string;
+  @IsEnum(ProductEnum, { message: 'Category not found' })
+  category?: ProductEnum;
 }

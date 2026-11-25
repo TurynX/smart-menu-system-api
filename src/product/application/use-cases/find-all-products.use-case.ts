@@ -6,8 +6,8 @@ import { ProductPort } from 'src/product/domain/ports/product.port';
 export class FindProductByNameOrIdUseCase {
   constructor(private readonly productPort: ProductPort) {}
 
-  async execute(id?: string, name?: string): Promise<ProductEntity> {
-    const product = await this.productPort.findProduct(id, name);
+  async execute(): Promise<ProductEntity[]> {
+    const product = await this.productPort.findAllProducts();
     if (!product) throw new NotFoundException('Product not found');
 
     return product;

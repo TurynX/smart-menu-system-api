@@ -21,7 +21,8 @@ export abstract class ProductPort {
   abstract findAllProducts(): Promise<ProductEntity[]>;
 
   abstract findProductByFilters(
-    query: GetProductsQueryDto,
+    name?: string,
+    type?: ProductEnum,
   ): Promise<ProductEntity[]>;
 
   abstract updateProduct(
