@@ -1,0 +1,15 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { ProductEntity } from 'src/product/domain/entities/product.entity';
+import { ProductPort } from 'src/product/domain/ports/product.port';
+
+@Injectable()
+export class FindProductByNameOrIdUseCase {
+  constructor(private readonly productPort: ProductPort) {}
+
+  async execute(id?: string, name?: string): Promise<ProductEntity> {
+    const product = await this.productPort.findProduct(id, name);
+    if (!product) throw new NotFoundException('Product not found');
+
+    return product;
+  }
+}
