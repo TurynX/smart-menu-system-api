@@ -5,6 +5,8 @@ import {
   HttpCode,
   HttpStatus,
   NotFoundException,
+  Param,
+  Patch,
   Post,
   Query,
   Req,
@@ -17,10 +19,12 @@ import {
   CreateProductDto,
   FindProductByNameOrIdDto,
   GetProductsQueryDto,
+  UpdateProductDto,
 } from '../dtos/product.dto';
 import { CreateProductUsecase } from 'src/product/application/use-cases/create-product.use-case';
 import { FindProductByQueryUseCase } from 'src/product/application/use-cases/find-product-by-query';
 import { FindAllProductsUseCase } from 'src/product/application/use-cases/find-all-products.use-case';
+import { UpdateProductUsecase } from 'src/product/application/use-cases/update-product.use-case';
 
 @UseGuards(AuthGuard)
 @Controller('product')
@@ -29,6 +33,7 @@ export class ProductController {
     private readonly createProductUseCase: CreateProductUsecase,
     private readonly findProductByQueryUseCase: FindProductByQueryUseCase,
     private readonly findAllProductUseCase: FindAllProductsUseCase,
+    private readonly updateProductUseCase: UpdateProductUsecase,
   ) {}
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -64,6 +69,27 @@ export class ProductController {
   @HttpCode(HttpStatus.OK)
   async findAllProducts() {
     const product = await this.findAllProductUseCase.execute();
+
+    return { data: product };
+  }
+
+  @Patch('/:productId')
+  @HttpCode(HttpStatus.CREATED)
+  async updateProduct(
+    @Req() req: Request,
+    @Param('productId') productId: string,
+    @Body() body: UpdateProductDto,
+  ) {
+    const userId = req['user'].sub;
+    if (!userId) throw new UnauthorizedException('UserId not provided');
+
+    const product = await this.updateProductUseCase.execute(
+      productId,
+      userId,
+      body.name,
+      body.price,
+      body.type,
+    );
 
     return { data: product };
   }

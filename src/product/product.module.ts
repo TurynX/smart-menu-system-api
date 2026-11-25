@@ -7,6 +7,7 @@ import { ProductController } from './infrastructure/controllers/product.controll
 import { PrismaService } from 'src/lib/repository/prisma.service';
 import { FindProductByQueryUseCase } from './application/use-cases/find-product-by-query';
 import { FindAllProductsUseCase } from './application/use-cases/find-all-products.use-case';
+import { UpdateProductUsecase } from './application/use-cases/update-product.use-case';
 
 @Module({
   imports: [AuthModule],
@@ -16,6 +17,7 @@ import { FindAllProductsUseCase } from './application/use-cases/find-all-product
     CreateProductUsecase,
     FindProductByQueryUseCase,
     FindAllProductsUseCase,
+    UpdateProductUsecase,
   ],
   controllers: [ProductController],
 })

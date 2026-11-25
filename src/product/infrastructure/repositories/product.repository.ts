@@ -30,12 +30,15 @@ export class ProductRepository implements ProductPort {
     return this.mapToEntity(product);
   }
 
-  async findProduct(id: string, name: string) {
+  async findProductByNameOrId(id?: string, name?: string) {
     try {
-      if (id !== undefined) {
+      if (id) {
+        const cleanId = typeof id === 'string' ? id.trim() : id;
+
         const product = await this.prisma.product
-          .whereUnique({ id })
-          .firstOrThrow();
+          .whereUnique({ id: cleanId })
+          .first();
+
         return this.mapToEntity(product);
       }
     } catch (error: any) {
@@ -43,15 +46,14 @@ export class ProductRepository implements ProductPort {
         throw new NotFoundException('Product not found');
       console.log(error);
     }
-    if (name !== undefined) {
+    if (name) {
       const product = await this.prisma.product.where({ name }).first();
 
       if (!product) return null;
 
       return this.mapToEntity(product);
-    } else {
-      throw new BadRequestException('Invalid parameters');
     }
+    throw new BadRequestException('Invalid parameters');
   }
 
   async findAllProducts() {

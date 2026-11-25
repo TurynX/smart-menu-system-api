@@ -29,7 +29,10 @@ export class CreateProductUsecase {
       );
     }
 
-    const nameExists = await this.productPort.findProduct(undefined, name);
+    const nameExists = await this.productPort.findProductByNameOrId(
+      undefined,
+      name,
+    );
 
     if (nameExists) {
       throw new ConflictException('Product name already exists');

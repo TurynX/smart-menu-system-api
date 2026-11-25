@@ -13,7 +13,7 @@ export abstract class ProductPort {
     type: ProductEnum,
   ): Promise<ProductEntity>;
 
-  abstract findProduct(
+  abstract findProductByNameOrId(
     id?: string,
     name?: string,
   ): Promise<ProductEntity | null>;
