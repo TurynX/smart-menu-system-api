@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -24,7 +25,8 @@ import {
 import { CreateProductUsecase } from 'src/product/application/use-cases/create-product.use-case';
 import { FindProductByQueryUseCase } from 'src/product/application/use-cases/find-product-by-query';
 import { FindAllProductsUseCase } from 'src/product/application/use-cases/find-all-products.use-case';
-import { UpdateProductUsecase } from 'src/product/application/use-cases/update-product.use-case';
+import { UpdateProductUseCase } from 'src/product/application/use-cases/update-product.use-case';
+import { DeleteProductUseCase } from 'src/product/application/use-cases/delete-product.use-case';
 
 @UseGuards(AuthGuard)
 @Controller('product')
@@ -33,7 +35,8 @@ export class ProductController {
     private readonly createProductUseCase: CreateProductUsecase,
     private readonly findProductByQueryUseCase: FindProductByQueryUseCase,
     private readonly findAllProductUseCase: FindAllProductsUseCase,
-    private readonly updateProductUseCase: UpdateProductUsecase,
+    private readonly updateProductUseCase: UpdateProductUseCase,
+    private readonly deleteProductUseCase: DeleteProductUseCase,
   ) {}
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -92,5 +95,19 @@ export class ProductController {
     );
 
     return { data: product };
+  }
+
+  @Delete('/:productId')
+  @HttpCode(HttpStatus.OK)
+  async deleteProduct(
+    @Req() req: Request,
+    @Param('productId') productId: string,
+  ) {
+    const userId = req['user'].sub;
+    if (!userId) throw new UnauthorizedException('UserId not provided');
+
+    await this.deleteProductUseCase.execute(userId, productId);
+
+    return { message: 'Product deleted' };
   }
 }

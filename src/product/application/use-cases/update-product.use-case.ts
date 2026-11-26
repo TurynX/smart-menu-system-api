@@ -1,9 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthPort } from 'src/auth/domain/ports/auth.port';
 import {
   ProductPort,
@@ -11,7 +6,7 @@ import {
 } from 'src/product/domain/ports/product.port';
 
 @Injectable()
-export class UpdateProductUsecase {
+export class UpdateProductUseCase {
   constructor(
     private readonly authPort: AuthPort,
     private readonly productPort: ProductPort,

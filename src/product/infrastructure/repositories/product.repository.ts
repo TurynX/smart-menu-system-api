@@ -105,7 +105,7 @@ export class ProductRepository implements ProductPort {
   async deleteProduct(id: string) {
     try {
       await this.prisma.product.where({ id }).delete();
-      return;
+      return true;
     } catch (error: any) {
       if (error.code === 'RUNTIME.NO_ROWS') {
         throw new NotFoundException('Product not found');

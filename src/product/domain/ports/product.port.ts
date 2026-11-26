@@ -32,5 +32,5 @@ export abstract class ProductPort {
     type?: ProductEnum,
   ): Promise<ProductEntity>;
 
-  abstract deleteProduct(id: string): Promise<void>;
+  abstract deleteProduct(id: string): Promise<boolean>;
 }
